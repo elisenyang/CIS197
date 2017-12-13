@@ -43,6 +43,7 @@ class Track extends React.Component {
     return (
       <div style={styles.container} className="container">
         <div>
+          <p style={styles.instruction}>To get URI: Right click on playlist/track -> Share -> Copy Spotify URI</p>
           <input type="text" style={styles.inputBar} className="trackURIInput" placeholder="Input Track URI.." onChange={(e) => {this.setState({trackURI: e.target.value})}}/>
           <button style={styles.button} onClick={() => this.handleAnalyze()}>Go</button>
         </div>
@@ -82,6 +83,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  instruction: {
+    fontSize: '10px'
   }
 }
 
