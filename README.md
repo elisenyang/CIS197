@@ -1,3 +1,3 @@
 # CIS197
 
-Spotify Playlist Analyzer
+Spotify Audio Feature Analyzer
