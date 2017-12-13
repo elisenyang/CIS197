@@ -11,7 +11,7 @@ var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri = 'http://localhost:3000/'; // Your redirect uri
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use((req, res, next) => {
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
     next();
  });
 
-app.get('/', (request, response) => {
+ app.get('/', (request, response) => {
     response.sendFile(__dirname + '/public/index.html');
 });
 
