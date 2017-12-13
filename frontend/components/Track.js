@@ -4,51 +4,52 @@ import Analysis from './Analysis'
 
 
 class Track extends React.Component {
-    constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
 
-        this.state = {
-            token: this.props.token,
-            trackURI: '',
-            data: {},
-            analyzed: false
-        }
+    this.state = {
+      token: this.props.token,
+      trackURI: '',
+      data: {},
+      analyzed: false
     }
+  }
 
-    handleAnalyze() {
-        let trackArr = this.state.trackURI.split(':')
-        let trackID = trackArr[trackArr.length -1]
-        fetch('/track/'+this.state.token+'/'+trackID, {
-            method: 'GET'
-        }).then(response => {
-            return response.json()
-        }).then(responseJSON => {
-            this.setState({data: responseJSON.data, analyzed: true})
-        }).catch(err => {
-            console.log(err.message)
-        })
+  handleAnalyze() {
+    // extract id from uri
+    let trackArr = this.state.trackURI.split(':')
+    let trackID = trackArr[trackArr.length - 1]
+    fetch('/track/' + this.state.token + '/' + trackID, {
+      method: 'GET'
+    }).then(response => {
+      return response.json()
+    }).then(responseJSON => {
+      this.setState({data: responseJSON.data, analyzed: true})
+    }).catch(err => {
+      console.log(err.message)
+    })
+  }
+
+  renderAnalysis() {
+    let trackArr = this.state.trackURI.split(':')
+    let trackID = trackArr[trackArr.length - 1]
+    if (this.state.analyzed) {
+      return (<Analysis data={this.state.data} type={'track'} token={this.props.token} login={this.props.login} trackID={trackID}/>)
     }
-
-    renderAnalysis() {
-        let trackArr = this.state.trackURI.split(':')
-        let trackID = trackArr[trackArr.length -1]
-        if (this.state.analyzed) {
-            return (<Analysis data={this.state.data} type={"track"} token={this.props.token} login={this.props.login} trackID={trackID}/>)
-        }
-    }
+  }
 
 
-    render() {
-        return(
-            <div style={styles.container} className="container">
-                <div>
-                    <input type="text" style={styles.inputBar} className="trackURIInput" placeholder="Input Track URI.." onChange={(e) => {this.setState({trackURI: e.target.value})}}/>
-                    <button style={styles.button} onClick={() => this.handleAnalyze()}>Go</button>
-                </div>
-                {this.renderAnalysis()}
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div style={styles.container} className="container">
+        <div>
+          <input type="text" style={styles.inputBar} className="trackURIInput" placeholder="Input Track URI.." onChange={(e) => {this.setState({trackURI: e.target.value})}}/>
+          <button style={styles.button} onClick={() => this.handleAnalyze()}>Go</button>
+        </div>
+        {this.renderAnalysis()}
+      </div>
+    )
+  }
 }
 
 const styles = {

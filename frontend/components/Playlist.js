@@ -4,53 +4,54 @@ import Analysis from './Analysis'
 
 
 class Playlist extends React.Component {
-    constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
 
-        this.state = {
-            token: this.props.token,
-            playlistURI: '',
-            data: {},
-            analyzed: false
-        }
+    this.state = {
+      token: this.props.token,
+      playlistURI: '',
+      data: {},
+      analyzed: false
     }
+  }
 
-    handleAnalyze() {
-        let playlistArr = this.state.playlistURI.split(':')
-        let playlistID = playlistArr[playlistArr.length -1]
-        let user = playlistArr[2]
-        fetch('/playlist/'+this.state.token+'/'+user+'/'+playlistID, {
-            method: 'GET'
-        }).then(response => {
-            return response.json()
-        }).then(responseJSON => {
-            this.setState({data: responseJSON.data, analyzed: true})
-        }).catch(err => {
-            console.log(err.message)
-        })
+  handleAnalyze() {
+    // extract user and id from uri
+    let playlistArr = this.state.playlistURI.split(':')
+    let playlistID = playlistArr[playlistArr.length - 1]
+    let user = playlistArr[2]
+    fetch('/playlist/' + this.state.token + '/' + user + '/' + playlistID, {
+      method: 'GET'
+    }).then(response => {
+      return response.json()
+    }).then(responseJSON => {
+      this.setState({data: responseJSON.data, analyzed: true})
+    }).catch(err => {
+      console.log(err.message)
+    })
+  }
+
+  renderAnalysis() {
+    let playlistArr = this.state.playlistURI.split(':')
+    let playlistID = playlistArr[playlistArr.length - 1]
+    let user = playlistArr[2]
+    if (this.state.analyzed) {
+      return (<Analysis login={this.props.login} data={this.state.data} type={'playlist'} user={user} playlistID={playlistID} token={this.props.token}/>)
     }
-
-    renderAnalysis() {
-        let playlistArr = this.state.playlistURI.split(':')
-        let playlistID = playlistArr[playlistArr.length -1]
-        let user = playlistArr[2]
-        if (this.state.analyzed) {
-            return (<Analysis login={this.props.login} data={this.state.data} type={"playlist"} user={user} playlistID={playlistID} token={this.props.token}/>)
-        }
-    }
+  }
 
 
-    render() {
-        return(
-            <div style={styles.container} className="container">
-                <div>
-                    <input type="text" style={styles.inputBar} className="playlistURIInput" placeholder="Input Playlist URI.." onChange={(e) => {this.setState({playlistURI: e.target.value})}}/>
-                    <button style={styles.button} onClick={() => this.handleAnalyze()}>Go</button>
-                </div>
-                {this.renderAnalysis()}
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div style={styles.container} className="container">
+        <div>
+          <input type="text" style={styles.inputBar} className="playlistURIInput" placeholder="Input Playlist URI.." onChange={(e) => {this.setState({playlistURI: e.target.value})}}/>
+          <button style={styles.button} onClick={() => this.handleAnalyze()}>Go</button>
+        </div>
+        {this.renderAnalysis()}
+      </div>
+    )
+  }
 }
 
 const styles = {

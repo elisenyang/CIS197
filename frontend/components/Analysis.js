@@ -6,30 +6,32 @@ class Analysis extends React.Component {
     super(props)
   }
 
+  
   renderInfo() {
-    if (this.props.type === "playlist") {
+    //renders playlist name, description, length, follow button
+    if (this.props.type === 'playlist') {
       return (
         <div style={styles.top}>
           <img style={styles.image} src={this.props.data.image}/>
           <div>
             <h3 style={styles.name}>{this.props.data.name}</h3>
             <p style={styles.description}>{this.props.data.description}</p>
-            <p style={styles.description}>{'Number of Tracks: '+this.props.data.length}</p>
+            <p style={styles.description}>{'Number of Tracks: ' + this.props.data.length}</p>
             <button style={styles.button} onClick={() => this.follow()}>Follow</button>
           </div>
         </div>
       )
     }
-
-    if (this.props.type === "track") {
+    // renders track name, artist, album, add to library button
+    if (this.props.type === 'track') {
       return (
         <div style={styles.top}>
           <img style={styles.image} src={this.props.data.image}/>
           <div>
-          <h3 style={styles.name}>{this.props.data.name}</h3>
-          <p style={styles.description}>{this.props.data.artists.join(', ')}</p>
-          <p style={styles.description}>{this.props.data.album}</p>
-          <button style={styles.button} onClick={() => this.addToLibrary()}>Add to Library</button>
+            <h3 style={styles.name}>{this.props.data.name}</h3>
+            <p style={styles.description}>{this.props.data.artists.join(', ')}</p>
+            <p style={styles.description}>{this.props.data.album}</p>
+            <button style={styles.button} onClick={() => this.addToLibrary()}>Add to Library</button>
           </div>
         </div>
       )
@@ -38,39 +40,39 @@ class Analysis extends React.Component {
 
   follow() {
     if (this.props.login) {
-        fetch('/follow/'+this.props.token+'/'+this.props.user+'/'+this.props.playlistID, {
-            method: 'GET'
-        }).then(response => {
-            return response.json()
-        }).then(responseJSON => {
-            if (responseJSON.status === 200) {
-                window.alert("Playlist has been followed")
-            } else {
-                window.alert("There was an error followng this playlist. Please try again")
-            }
-        }).catch(err => {
-            console.log(err.message)
-        }) 
-    } else {
-        alert("Please login with Spotify to follow this playlist.")
-    } 
-  }
-
-  addToLibrary() {
-    if (this.props.login) {
-      fetch('/addToLibrary/'+this.props.token+'/'+this.props.trackID, {
+      fetch('/follow/' + this.props.token + '/' + this.props.user + '/' + this.props.playlistID, {
         method: 'GET'
       }).then(response => {
         return response.json()
       }).then(responseJSON => {
         if (responseJSON.status === 200) {
-          window.alert("Track has been added to your library")
+          window.alert('Playlist has been followed')
         } else {
-          window.alert("There was an error. Please try again.")
+          window.alert('There was an error followng this playlist. Please try again')
+        }
+      }).catch(err => {
+        console.log(err.message)
+      }) 
+    } else {
+      alert('Please login with Spotify to follow this playlist.')
+    } 
+  }
+
+  addToLibrary() {
+    if (this.props.login) {
+      fetch('/addToLibrary/' + this.props.token + '/' + this.props.trackID, {
+        method: 'GET'
+      }).then(response => {
+        return response.json()
+      }).then(responseJSON => {
+        if (responseJSON.status === 200) {
+          window.alert('Track has been added to your library')
+        } else {
+          window.alert('There was an error. Please try again.')
         }
       })
     } else {
-      window.alert("Pleae login with Spotify to add this track to your library.")
+      window.alert('Pleae login with Spotify to add this track to your library.')
     }
   }
 
@@ -87,7 +89,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
               Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.danceability*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.danceability * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -107,7 +109,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
               Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.energy*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.energy * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -117,7 +119,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
               Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.instrumentalness*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.instrumentalness * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -127,7 +129,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
               A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.acousticness*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.acousticness * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -137,7 +139,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
             Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.liveness*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.liveness * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -147,7 +149,7 @@ class Analysis extends React.Component {
             <p style={styles.definition}>
               Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
             </p>
-            <input type="range" min="0" max="100" value={String(this.props.data.stats.speechiness*100)} style={styles.slider}/>
+            <input type="range" min="0" max="100" value={String(this.props.data.stats.speechiness * 100)} style={styles.slider}/>
           </div>
           <div style={styles.item}>
             <p style={styles.paragraph}>
@@ -159,7 +161,7 @@ class Analysis extends React.Component {
             </p>
             <p style={styles.paragraph}>
               <span style={styles.props}>Tempo: </span>
-              <span style={styles.vals}>{String(this.props.data.stats.tempo).substring(0,5)+ ' BPM'}</span>
+              <span style={styles.vals}>{String(this.props.data.stats.tempo).substring(0,5) + ' BPM'}</span>
             </p>
             <p style={styles.definition}>
               The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
