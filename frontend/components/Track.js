@@ -18,7 +18,6 @@ class Track extends React.Component {
     handleAnalyze() {
         let trackArr = this.state.trackURI.split(':')
         let trackID = trackArr[trackArr.length -1]
-        console.log(trackID)
         fetch('/track/'+this.state.token+'/'+trackID, {
             method: 'GET'
         }).then(response => {
@@ -31,8 +30,10 @@ class Track extends React.Component {
     }
 
     renderAnalysis() {
+        let trackArr = this.state.trackURI.split(':')
+        let trackID = trackArr[trackArr.length -1]
         if (this.state.analyzed) {
-            return (<Analysis data={this.state.data} type={"track"}/>)
+            return (<Analysis data={this.state.data} type={"track"} token={this.props.token} login={this.props.login} trackID={trackID}/>)
         }
     }
 
@@ -71,7 +72,8 @@ const styles = {
     backgroundColor: 'rgba(255,255,255,0.4)',
     height: '35px',
     width: '35px',
-    marginLeft: '2px'
+    marginLeft: '2px',
+    boxShadow: '2px 3px rgba(0,0,0,0.4)'
   },
   container: {
     width: '100vw',

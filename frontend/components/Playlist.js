@@ -19,13 +19,11 @@ class Playlist extends React.Component {
         let playlistArr = this.state.playlistURI.split(':')
         let playlistID = playlistArr[playlistArr.length -1]
         let user = playlistArr[2]
-        console.log(user)
         fetch('/playlist/'+this.state.token+'/'+user+'/'+playlistID, {
             method: 'GET'
         }).then(response => {
             return response.json()
         }).then(responseJSON => {
-            console.log(responseJSON.data)
             this.setState({data: responseJSON.data, analyzed: true})
         }).catch(err => {
             console.log(err.message)
@@ -33,8 +31,11 @@ class Playlist extends React.Component {
     }
 
     renderAnalysis() {
+        let playlistArr = this.state.playlistURI.split(':')
+        let playlistID = playlistArr[playlistArr.length -1]
+        let user = playlistArr[2]
         if (this.state.analyzed) {
-            return (<Analysis data={this.state.data} type={"playlist"}/>)
+            return (<Analysis login={this.props.login} data={this.state.data} type={"playlist"} user={user} playlistID={playlistID} token={this.props.token}/>)
         }
     }
 
@@ -71,7 +72,8 @@ const styles = {
     backgroundColor: 'rgba(255,255,255,0.4)',
     height: '35px',
     width: '35px',
-    marginLeft: '2px'
+    marginLeft: '2px',
+    boxShadow: '2px 3px rgba(0,0,0,0.4)'
   },
   container: {
     width: '100vw',
