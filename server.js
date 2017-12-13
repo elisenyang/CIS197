@@ -21,7 +21,7 @@ app.use((req, res, next) => {
  });
 
  app.get('/', (request, response) => {
-    response.sendFile('/index.html');
+    response.sendFile(__dirname + '/public/index.html');
 });
 
 //get authorization token needed to access all spotify api routes
