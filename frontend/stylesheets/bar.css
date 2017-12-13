@@ -1,0 +1,14 @@
+.progressbar .progress {
+  background-color: green;
+  border-radius: 4px;
+  transition: width 400ms ease-in-out;
+  height: 400px;
+}
+
+.progressbar {
+  width: 400px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: lightgrey;
+  padding: 10px;
+}

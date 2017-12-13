@@ -30,23 +30,11 @@ app.get('/getToken', function(req, res) {
       })
 })
 
-app.get('/playlist/:token/:playlistId', function (req, res) {
+app.get('/playlist/:token/:user/:playlistId', function (req, res) {
     //object where all info obtained will be stored
     var info = {}
-    //get playlist name, description, and image
-    fetch("https://api.spotify.com/v1/users/spotifycharts/playlists/"+req.params.playlistId, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Authorization": "Bearer " + req.params.token
-        }
-    }).then(response => {
-        return response.json()
-    }).then(responseJSON => {
-        console.log(responseJSON.tracks)
-    })
-    //get ids of all tracks in playlist
-    fetch("https://api.spotify.com/v1/users/spotifycharts/playlists/"+req.params.playlistId, {
+    //get playlist info and ids of all tracks in playlist
+    fetch("https://api.spotify.com/v1/users/"+req.params.user+"/playlists/"+req.params.playlistId, {
         method: 'GET',
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -100,15 +88,46 @@ app.get('/playlist/:token/:playlistId', function (req, res) {
 })
 
 
-// app.get('/login', function(req, res) {
-//     var scopes = 'user-read-private user-read-email';
-//     var redirect_uri='localhost:3000/'
-//     res.redirect('https://accounts.spotify.com/authorize' + 
-//       '?response_type=code' +
-//       '&client_id=' + process.env.SPOTIFY_CLIENT_ID+
-//       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-//       '&redirect_uri=' + encodeURIComponent(redirect_uri));
-//     });
+app.get('/track/:token/:trackId', function(req, res) {
+    let info = {}
+    fetch("https://api.spotify.com/v1/tracks/"+req.params.trackId, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer " + req.params.token
+        }
+    }).then(response => {
+        return response.json()
+    }).then(responseJSON => {
+        info.name = responseJSON.name
+        info.artists = []
+        responseJSON.artists.forEach(artist => {
+            info.artists.push(artist.name)
+        })
+        info.album = responseJSON.album.name
+        info.image = responseJSON.album.images[0].url
+        return;
+    }).then(() => {
+        fetch("https://api.spotify.com/v1/audio-features/"+req.params.trackId, {
+            method: 'GET',
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": "Bearer " + req.params.token
+            }
+        }).then(response => {
+            return response.json()
+        }).then(responseJSON => {
+            info.stats = responseJSON
+            return;
+        }).then(() => {
+            res.json({data: info})
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }).catch(err => {
+        console.log(err.message)
+    })  
+})
 
 
 app.listen(PORT, error => {
